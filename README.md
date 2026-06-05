@@ -1,4 +1,4 @@
-<img width="1285" height="587" alt="Screenshot 2026-06-06 012712" src="https://github.com/user-attachments/assets/ba3e9815-8bc7-4861-a053-646c3ac78790" /># 🚀 NEXUS ECLIPSE | Next-Gen Interactive Gaming Arena
+# 🚀 NEXUS ECLIPSE | Next-Gen Interactive Gaming Arena
 
 An ultra-modern, cyberpunk-themed responsive landing page designed and developed for the **Gaming Zone Website Landing Page Design & Frontend Development Challenge**. This project features a cutting-edge Esports UI dashboard aesthetics, glassmorphic HUD interfaces, and high-fidelity micro-interactions built strictly from scratch.
 
