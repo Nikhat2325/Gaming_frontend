@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS ECLIPSE | Premium Interactive Gaming Arena</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neonCyan: '#00f0ff',
+                        neonMagenta: '#ff007f',
+                        neonViolet: '#b5179e',
+                        cyberBlack: '#030208',
+                        hudCard: 'rgba(15, 14, 33, 0.45)',
+                        lightPlate: '#f8fafc'
+                    },
+                    boxShadow: {
+                        hudGlow: '0 0 30px rgba(0, 240, 255, 0.15)',
+                        cyanPulse: '0 0 25px rgba(0, 240, 255, 0.65)',
+                        magentaPulse: '0 0 25px rgba(255, 0, 127, 0.65)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+        .hud-font { font-family: 'Syncopate', sans-serif; }
+        
+        /* Smooth Scroll & Layout Fade Engine */
+        .reveal-node { opacity: 0; transform: scale(0.96) translateY(30px); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-node.active { opacity: 1; transform: scale(1) translateY(0); }
+        
+        /* Custom Neon Tech scanlines background overlay */
+        .scanlines { background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 6px 100%; }
+        
+        /* Extraordinary Fluid Gallery Columns Configuration */
+        .gallery-container { display: flex; width: 100%; height: 500px; gap: 0.75rem; }
+        .gallery-panel { flex: 1; height: 100%; overflow: hidden; border-radius: 1rem; position: relative; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.05); }
+        .gallery-panel:hover { flex: 4; border-color: #00f0ff; box-shadow: 0 0 25px rgba(0, 240, 255, 0.3); }
+        .gallery-panel img { width: 100%; height: 100%; object-cover: cover; transition: transform 0.6s ease; }
+    </style>
+</head>
+<body class="bg-lightPlate text-slate-900 dark:bg-cyberBlack dark:text-white transition-colors duration-500 overflow-x-hidden antialiased selection:bg-neonCyan selection:text-black">
+
+    <!-- 1. STICKY GLASS HUD NAVBAR -->
+    <nav class="fixed top-0 w-full z-50 bg-white/60 dark:bg-cyberBlack/50 backdrop-blur-xl border-b border-slate-200/60 dark:border-neonCyan/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-24">
+                <a href="#" class="hud-font text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-neonCyan via-white to-neonMagenta">
+                    // NEXUS.ECX
+                </a>
+                <div class="hidden md:flex items-center space-x-10 font-bold tracking-widest text-2xs text-slate-600 dark:text-slate-400">
+                    <a href="#home" class="hover:text-neonCyan transition-colors relative group py-2">HOME<span class="absolute bottom-0 left-0 w-0 h-[2px] bg-neonCyan group-hover:w-full transition-all"></span></a>
+                    <a href="#about" class="hover:text-neonCyan transition-colors relative group py-2">ABOUT<span class="absolute bottom-0 left-0 w-0 h-[2px] bg-neonCyan group-hover:w-full transition-all"></span></a>
+                    <a href="#setups" class="hover:text-neonCyan transition-colors relative group py-2">SETUPS<span class="absolute bottom-0 left-0 w-0 h-[2px] bg-neonCyan group-hover:w-full transition-all"></span></a>
+                    <a href="#pricing" class="hover:text-neonCyan transition-colors relative group py-2">PRICING<span class="absolute bottom-0 left-0 w-0 h-[2px] bg-neonCyan group-hover:w-full transition-all"></span></a>
+                    <a href="#gallery" class="text-neonCyan transition-colors relative group py-2">ARENA MAPS<span class="absolute bottom-0 left-0 w-full h-[2px] bg-neonCyan"></span></a>
+                    <a href="#testimonials" class="hover:text-neonCyan transition-colors relative group py-2">FEEDBACK<span class="absolute bottom-0 left-0 w-0 h-[2px] bg-neonCyan group-hover:w-full transition-all"></span></a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-3 rounded-xl border border-slate-200 dark:border-neonCyan/20 bg-white dark:bg-hudCard hover:scale-105 transition-transform">
+                        <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-500 dark:text-neonCyan"></i>
+                    </button>
+                    <a href="#pricing" class="hidden sm:inline-block hud-font bg-gradient-to-r from-neonMagenta to-neonViolet text-white px-6 py-3.5 rounded-xl font-bold tracking-wider text-2xs shadow-magentaPulse/20 shadow-lg hover:shadow-magentaPulse transition-all">
+                        BOOK SECTOR
+                    </a>
+                    <button id="menu-btn" class="md:hidden text-2xl"><i class="fa-solid fa-square-rss text-neonCyan"></i></button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 dark:bg-cyberBlack/95 border-b border-slate-200 dark:border-neonCyan/10 px-6 py-8 space-y-4 absolute w-full left-0 shadow-2xl">
+            <a href="#home" class="block font-bold tracking-wider hover:text-neonCyan">HOME</a>
+            <a href="#about" class="block font-bold tracking-wider hover:text-neonCyan">ABOUT</a>
+            <a href="#setups" class="block font-bold tracking-wider hover:text-neonCyan">SETUPS</a>
+            <a href="#pricing" class="block font-bold tracking-wider hover:text-neonCyan">PRICING</a>
+            <a href="#gallery" class="block font-bold tracking-wider text-neonCyan">ARENA MAPS</a>
+            <a href="#testimonials" class="block font-bold tracking-wider hover:text-neonCyan">FEEDBACK</a>
+            <a href="#pricing" class="block hud-font bg-gradient-to-r from-neonCyan to-neonViolet text-center text-black font-bold py-4 rounded-xl text-xs">BOOK SECTOR</a>
+        </div>
+    </nav>
+
+    <!-- INTRO HUD HERO CONTAINER -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-24 overflow-hidden bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(3,2,8,0.3), rgba(3,2,8,0.98)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070');">
+        <div class="absolute inset-0 scanlines pointer-events-none opacity-40"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-flex items-center gap-3 bg-hudCard border border-neonCyan/30 text-neonCyan px-6 py-2.5 rounded-xl text-2xs font-bold tracking-widest uppercase mb-8 shadow-hudGlow backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-neonCyan animate-ping"></span> NODE SYSTEM ONLINE // CURRENT STABLE OVERCLOCK
+            </div>
+            <h1 class="hud-font text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white mb-8 leading-none">
+                REDEFINE YOUR<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonCyan via-indigo-200 to-neonMagenta drop-shadow-[0_0_30px_rgba(0,240,255,0.2)]">EXECUTION TIER</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-sm sm:text-base text-slate-300 font-medium tracking-wide mb-12 leading-relaxed">
+                Disconnect from baseline performance limitations. Sync directly into our custom isolated eSports grid lanes built with high-frequency silicon matrices.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+                <a href="#setups" class="w-full sm:w-auto hud-font bg-white text-black hover:bg-neonCyan hover:shadow-cyanPulse hover:scale-105 transition-all duration-300 px-8 py-4.5 rounded-xl font-bold tracking-widest text-2xs">
+                    CONNECT TERMINAL
+                </a>
+                <a href="#gallery" class="w-full sm:w-auto hud-font border border-white/20 text-white hover:border-neonMagenta hover:bg-neonMagenta/10 px-8 py-4.5 rounded-xl font-bold tracking-widest text-2xs transition-all duration-300">
+                    SCAN INFRASTRUCTURE
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. TELEMETRY ABOUT SECTION -->
+    <section id="about" class="py-36 border-y border-slate-200 dark:border-neonCyan/5 bg-slate-50 dark:bg-hudCard/10 relative reveal-node">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="relative">
+                    <!-- Glass tech plate decoration behind image -->
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-neonCyan/20 to-neonMagenta/20 rounded-3xl blur-xl opacity-40"></div>
+                    <div class="relative border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden p-2 bg-white dark:bg-cyberBlack">
+                        <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1930" alt="Nexus Rigs" class="rounded-xl object-cover h-[420px] w-full">
+                    </div>
+                </div>
+                <div>
+                    <span class="hud-font text-2xs font-bold text-neonMagenta tracking-widest block mb-4">// CORE DATA MATRIX</span>
+                    <h2 class="hud-font text-2xl sm:text-4xl font-black mb-8 leading-tight tracking-wide">COMPUTATIONAL DOMINANCE FOR EVERY SQUAD MEMBER.</h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8 font-medium">
+                        Nexus bypasses casual configurations. Every station operates inside an engineered hardware sandbox cluster built to preserve input fidelity and minimize rendering blockages.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="p-5 rounded-xl border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard flex items-start gap-4 hover:border-neonCyan/30 transition-colors">
+                            <div class="text-neonCyan text-xl mt-1"><i class="fa-solid fa-network-wired"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm tracking-wide mb-1">Direct Path Latency Engine</h3>
+                                <p class="text-2xs text-slate-500 dark:text-slate-400">Custom dark fiber loops keep in-game ping parameters below real threshold variances.</p>
+                            </div>
+                        </div>
+                        <div class="p-5 rounded-xl border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard flex items-start gap-4 hover:border-neonMagenta/30 transition-colors">
+                            <div class="text-neonMagenta text-xl mt-1"><i class="fa-solid fa-temperature-arrow-down"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm tracking-wide mb-1">Cryo-Thermal Workspace Nodes</h3>
+                                <p class="text-2xs text-slate-500 dark:text-slate-400">Environmental structures constant balanced at climate-perfect loops to ensure focus control.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. TACTICAL SETUPS SECTOR -->
+    <section id="setups" class="py-36 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-node">
+        <div class="text-center mb-24">
+            <span class="hud-font text-2xs font-bold text-neonCyan tracking-widest block mb-4">// DECK ALLOCATIONS</span>
+            <h2 class="hud-font text-2xl sm:text-4xl font-black tracking-wide">SELECT YOUR SYSTEM SPECS</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+            <!-- System 1 -->
+            <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard rounded-2xl overflow-hidden hover:border-neonCyan/30 transition-all duration-500 group flex flex-col justify-between shadow-hudGlow">
+                <div class="relative overflow-hidden h-56">
+                    <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=1974" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="PC System">
+                    <div class="absolute bottom-4 left-4 bg-cyberBlack/80 border border-neonCyan/30 text-neonCyan text-3xs hud-font px-3 py-1 rounded">ARRAY_PC.090</div>
+                </div>
+                <div class="p-6 lg:p-8 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base mb-3 group-hover:text-neonCyan transition-colors tracking-wide">Elite PC Battlestations</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-8">Isolated structural computation matrices loaded with 14th gen microchips and unlocked 360Hz graphics panels.</p>
+                    </div>
+                    <button onclick="inspectNode('PC Flagship Node Array', 'System Specs Array:<br>• CPU: Intel Core i9-14900KS Matrix<br>• Core GPU: Nvidia RTX 4090 Dedicated VRAM<br>• Refresh Output: 360Hz Quantum-Dot OLED Node<br>• Input Matrix: Custom Optical Switch Arrays')" class="w-full py-4 bg-slate-100 hover:bg-neonCyan hover:text-black dark:bg-white/5 dark:hover:bg-neonCyan dark:hover:text-black font-bold tracking-widest text-2xs rounded-xl transition-all">DIAGNOSTICS SPEC SHEET</button>
+                </div>
+            </div>
+            <!-- System 2 -->
+            <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard rounded-2xl overflow-hidden hover:border-neonMagenta/30 transition-all duration-500 group flex flex-col justify-between shadow-hudGlow">
+                <div class="relative overflow-hidden h-56">
+                    <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=2070" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="PS5 Lg">
+                    <div class="absolute bottom-4 left-4 bg-cyberBlack/80 border border-neonMagenta/30 text-neonMagenta text-3xs hud-font px-3 py-1 rounded">ARRAY_CONSOLE.PS5</div>
+                </div>
+                <div class="p-6 lg:p-8 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base mb-3 group-hover:text-neonMagenta transition-colors tracking-wide">PlayStation 5 Lounges</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-8">Large luxury staging environments hosting 4K HDR displays coupled with high-fidelity directional audio maps.</p>
+                    </div>
+                    <button onclick="inspectNode('PlayStation 5 Pro Segment', 'System Specs Array:<br>• System Core: PS5 Pro Edition Loop<br>• Display Node: 65\" LG Ultimate 4K OLED Matrix<br>• Audio Loop: Dolby Atmos 7.1 Multi-Channel Array<br>• Remotes: DualSense Custom Pro Triggers')" class="w-full py-4 bg-slate-100 hover:bg-neonMagenta hover:text-white dark:bg-white/5 dark:hover:bg-neonMagenta dark:hover:text-white font-bold tracking-widest text-2xs rounded-xl transition-all">DIAGNOSTICS SPEC SHEET</button>
+                </div>
+            </div>
+            <!-- System 3 -->
+            <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard rounded-2xl overflow-hidden hover:border-neonCyan/30 transition-all duration-500 group flex flex-col justify-between shadow-hudGlow">
+                <div class="relative overflow-hidden h-56">
+                    <img src="https://images.unsplash.com/photo-1621259182978-f09e5e2ae091?q=80&w=2070" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Xbox Pod">
+                    <div class="absolute bottom-4 left-4 bg-cyberBlack/80 border border-neonCyan/30 text-neonCyan text-3xs hud-font px-3 py-1 rounded">ARRAY_CONSOLE.XBX</div>
+                </div>
+                <div class="p-6 lg:p-8 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base mb-3 group-hover:text-neonCyan transition-colors tracking-wide">Xbox Series X Pods</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-8">Direct high speed pipeline storage architectures syncing endless title choices with fast dashboard switching maps.</p>
+                    </div>
+                    <button onclick="inspectNode('Xbox Series X Pod Segment', 'System Specs Array:<br>• Core Hub: Xbox Series X Custom Architecture<br>• Storage Speed: Custom Expansion NVMe Core Matrix<br>• Control Layouts: Xbox Pro Elite 2 Variable Dampers<br>• Monitor Node: BenQ 4K Pro Console Arrays')" class="w-full py-4 bg-slate-100 hover:bg-neonCyan hover:text-black dark:bg-white/5 dark:hover:bg-neonCyan dark:hover:text-black font-bold tracking-widest text-2xs rounded-xl transition-all">DIAGNOSTICS SPEC SHEET</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. ALLOCATION RATES PRICING -->
+    <section id="pricing" class="py-36 border-y border-slate-200 dark:border-neonCyan/5 bg-slate-50 dark:bg-hudCard/10 reveal-node">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-24">
+                <span class="hud-font text-2xs font-bold text-neonMagenta tracking-widest block mb-4">// TARIFF CODES</span>
+                <h2 class="hud-font text-2xl sm:text-4xl font-black tracking-wide">OPERATIONAL TIME GRIDS</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 lg:gap-12 items-center">
+                <!-- Basic Card -->
+                <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard p-8 rounded-2xl flex flex-col justify-between min-h-[460px]">
+                    <div>
+                        <h4 class="hud-font text-3xs font-bold text-slate-400 tracking-widest mb-2">SECTOR_CORE</h4>
+                        <div class="mb-8 font-medium"><span class="hud-font text-4xl font-black text-slate-900 dark:text-white">₹99</span> <span class="text-2xs text-slate-400">/ hour</span></div>
+                        <ul class="space-y-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> RTX 3060 Baseline Arena Deck</li>
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> Access across basic console modules</li>
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> 144Hz IPS display layouts</li>
+                        </ul>
+                    </div>
+                    <button class="mt-8 w-full py-4 border border-slate-200 dark:border-white/10 hover:border-neonCyan text-2xs font-bold tracking-widest rounded-xl transition-all">ENGAGE NODE</button>
+                </div>
+                <!-- Highlighted Card -->
+                <div class="border-2 border-neonCyan bg-white dark:bg-hudCard p-8 rounded-2xl flex flex-col justify-between min-h-[510px] relative transform md:scale-105 shadow-cyanPulse/10 shadow-2xl z-10">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neonCyan text-black hud-font font-black px-4 py-1 rounded text-3xs tracking-widest">HIGHEST PRIORITY</span>
+                    <div>
+                        <h4 class="hud-font text-3xs font-bold text-neonCyan tracking-widest mb-2">SECTOR_OVERCLOCK</h4>
+                        <div class="mb-8 font-medium"><span class="hud-font text-4xl font-black text-slate-900 dark:text-white">₹199</span> <span class="text-2xs text-slate-400">/ hour</span></div>
+                        <ul class="space-y-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> RTX 4090 Uncapped Flagship Desks</li>
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> Dual Panel Arrays running 360Hz refresh</li>
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> Professional dynamic streaming HUD setup</li>
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> Dedicated server latency pipeline route</li>
+                        </ul>
+                    </div>
+                    <button class="mt-8 w-full py-4 bg-gradient-to-r from-neonCyan to-neonViolet text-black font-bold tracking-widest text-2xs rounded-xl shadow-cyanPulse/20 shadow-md">ENGAGE NODE</button>
+                </div>
+                <!-- Premium Pass Card -->
+                <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard p-8 rounded-2xl flex flex-col justify-between min-h-[460px]">
+                    <div>
+                        <h4 class="hud-font text-3xs font-bold text-slate-400 tracking-widest mb-2">SECTOR_RAID_NIGHT</h4>
+                        <div class="mb-8 font-medium"><span class="hud-font text-4xl font-black text-slate-900 dark:text-white">₹699</span> <span class="text-2xs text-slate-400">/ night</span></div>
+                        <ul class="space-y-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> 10 PM to 6 AM Continuous Sandbox Access</li>
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> Premium energy beverages package included</li>
+                            <li><i class="fa-solid fa-square text-neonCyan mr-3 text-3xs"></i> Free movement permissions across all pods</li>
+                        </ul>
+                    </div>
+                    <button class="mt-8 w-full py-4 border border-slate-200 dark:border-white/10 hover:border-neonMagenta text-2xs font-bold tracking-widest rounded-xl transition-all">ENGAGE NODE</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. EXTRAORDINARY FLUID INTERACTIVE 8-IMAGE COLUMN GALLERY -->
+    <section id="gallery" class="py-36 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-node">
+        <div class="text-center mb-24">
+            <span class="hud-font text-2xs font-bold text-neonCyan tracking-widest block mb-4">// SECTOR MAP GRAPHIC</span>
+            <h2 class="hud-font text-2xl sm:text-4xl font-black tracking-wide mb-4">THE VISUAL SPECTRUM MATRIX</h2>
+            <p class="max-w-xl mx-auto text-xs text-slate-500 dark:text-slate-400 font-medium">Hover over individual vertical panels to expand real architecture blueprints inside our physical zones.</p>
+        </div>
+        
+        <!-- Modern Fluid Expandable Flex Matrix Layer (8 Advanced Nodes) -->
+        <div class="gallery-container flex flex-col lg:flex-row h-auto lg:h-[550px]">
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071" alt="Lounge Area Node" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonCyan/20 pointer-events-none"><p class="hud-font text-3xs text-neonCyan">SECTOR_MAP // 01</p></div>
+            </div>
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1560253023-3ec5d502959f?q=80&w=2070" alt="Esports Cluster Matrix" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonMagenta/20 pointer-events-none"><p class="hud-font text-3xs text-neonMagenta">SECTOR_MAP // 02</p></div>
+            </div>
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070" alt="Streaming Module" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonCyan/20 pointer-events-none"><p class="hud-font text-3xs text-neonCyan">SECTOR_MAP // 03</p></div>
+            </div>
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1994" alt="PlayStation Lounge Frame" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonMagenta/20 pointer-events-none"><p class="hud-font text-3xs text-neonMagenta">SECTOR_MAP // 04</p></div>
+            </div>
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1600861195091-690c92f1d2cc?q=80&w=2040" alt="VR Simulator Module" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonCyan/20 pointer-events-none"><p class="hud-font text-3xs text-neonCyan">SECTOR_MAP // 05</p></div>
+            </div>
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1548685913-fe6574340a49?q=80&w=2020" alt="Racing Deck Cockpit" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonMagenta/20 pointer-events-none"><p class="hud-font text-3xs text-neonMagenta">SECTOR_MAP // 06</p></div>
+            </div>
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1968" alt="Team War Cabin Node" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonCyan/20 pointer-events-none"><p class="hud-font text-3xs text-neonCyan">SECTOR_MAP // 07</p></div>
+            </div>
+            <div class="gallery-panel">
+                <img src="https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?q=80&w=2070" alt="Console Pod Array Frame" class="cursor-zoom-in" onclick="popLightbox(this.src)">
+                <div class="absolute bottom-4 left-4 bg-black/80 p-3 rounded-lg border border-neonMagenta/20 pointer-events-none"><p class="hud-font text-3xs text-neonMagenta">SECTOR_MAP // 08</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. TEAM LOG VERIFIED FEEDBACK -->
+    <section id="testimonials" class="py-36 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-hudCard/10 reveal-node">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-24">
+                <span class="hud-font text-2xs font-bold text-neonViolet tracking-widest block mb-4">// COMMS INTERCEPT</span>
+                <h2 class="hud-font text-2xl sm:text-4xl font-black tracking-wide">FEEDBACK RECORD ENTRIES</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Log 1 -->
+                <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard p-6 lg:p-8 rounded-2xl relative shadow-md">
+                    <p class="text-slate-600 dark:text-slate-300 italic text-xs leading-relaxed mb-6 font-medium">"Flawless input mapping response curves inside the streaming booth modules. Didn't experience an isolated jitter frame sequence across continuous matches."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-lg bg-neonCyan/20 text-neonCyan flex items-center justify-center font-bold text-2xs">RS</div>
+                        <div>
+                            <div class="font-bold text-xs">Rohan Sharma</div>
+                            <div class="flex text-3xs text-amber-500 gap-0.5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Log 2 -->
+                <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard p-6 lg:p-8 rounded-2xl relative shadow-md">
+                    <p class="text-slate-600 dark:text-slate-300 italic text-xs leading-relaxed mb-6 font-medium">"The LG 4K OLED monitor configurations inside console pod sectors are incredible. Color gamuts execute cleanly with high fidelity depth."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-lg bg-neonMagenta/20 text-neonMagenta flex items-center justify-center font-bold text-2xs">PP</div>
+                        <div>
+                            <div class="font-bold text-xs">Priya Patel</div>
+                            <div class="flex text-3xs text-amber-500 gap-0.5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Log 3 -->
+                <div class="border border-slate-200 dark:border-white/5 bg-white dark:bg-hudCard p-6 lg:p-8 rounded-2xl relative shadow-md">
+                    <p class="text-slate-600 dark:text-slate-300 italic text-xs leading-relaxed mb-6 font-medium">"Top infrastructure layout alignment variables and responsive technical staff profiles. This base coordinates as our primary tournament preparation node."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-lg bg-neonViolet/20 text-neonViolet flex items-center justify-center font-bold text-2xs">AV</div>
+                        <div>
+                            <div class="font-bold text-xs">Aman Verma</div>
+                            <div class="flex text-3xs text-amber-500 gap-0.5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. TERMINAL FOOTER LINKS -->
+    <footer class="bg-white dark:bg-cyberBlack text-slate-500 dark:text-slate-400 pt-24 pb-12 border-t border-slate-200 dark:border-neonCyan/10 transition-colors duration-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-12 pb-16 border-b border-slate-200 dark:border-white/5">
+            <div>
+                <a href="#" class="hud-font text-lg font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-neonCyan to-neonMagenta mb-6 inline-block">// NEXUS TERMINAL</a>
+                <p class="text-xs leading-relaxed font-medium max-w-sm">Preserving physical computational integrity pathways for pro esports teams and tactical casual deployment nodes.</p>
+            </div>
+            <div>
+                <h5 class="hud-font text-3xs font-black tracking-widest text-slate-900 dark:text-white mb-6">// DIRECTORY STRUCTURE</h5>
+                <ul class="space-y-3 text-xs font-bold">
+                    <li><a href="#about" class="hover:text-neonCyan transition-colors">Infrastructure Matrices</a></li>
+                    <li><a href="#setups" class="hover:text-neonCyan transition-colors">Hardware Allocations</a></li>
+                    <li><a href="#pricing" class="hover:text-neonCyan transition-colors">Tariff Nodes</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="hud-font text-3xs font-black tracking-widest text-slate-900 dark:text-white mb-6">// BROADCAST LINKS</h5>
+                <div class="flex space-x-6 text-lg">
+                    <a href="#" class="hover:text-neonCyan transition-all transform hover:scale-110"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" class="hover:text-neonCyan transition-all transform hover:scale-110"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-neonCyan transition-all transform hover:scale-110"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="hover:text-neonCyan transition-all transform hover:scale-110"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 text-center text-3xs font-bold tracking-widest text-slate-400">
+            &copy; 2026 NEXUS ECLIPSE FRAMEWORKS. BUILT EXCLUSIVELY FOR ESCO FRONTEND SHOWCASE CRITERIA.
+        </div>
+    </footer>
+
+    <!-- REAL-TIME DATA INSPECTOR DIALOG MODULE -->
+    <div id="specs-modal" class="fixed inset-0 bg-cyberBlack/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-hudCard border border-slate-200 dark:border-neonCyan/20 p-8 rounded-2xl max-w-md w-full mx-4 relative shadow-2xl">
+            <button onclick="inspectNode()" class="absolute top-4 right-4 text-2xl text-slate-400 hover:text-white focus:outline-none">&times;</button>
+            <h4 id="modal-title" class="hud-font text-sm font-black mb-6 text-neonCyan tracking-widest"></h4>
+            <div id="modal-desc" class="text-slate-600 dark:text-slate-300 text-xs font-semibold space-y-3 leading-relaxed"></div>
+            <button onclick="inspectNode()" class="mt-8 w-full bg-gradient-to-r from-neonMagenta to-neonViolet text-white py-3.5 rounded-xl hud-font text-3xs font-bold tracking-widest">CLOSE PIPELINE</button>
+        </div>
+    </div>
+
+    <!-- MASONRY OVERLAY EXPANSION FRAME -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center hidden" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-[94vw] max-h-[88vh] rounded-xl border border-white/10 shadow-2xl">
+    </div>
+
+    <!-- DYNAMIC CORE INTERACTION SCRIPTS -->
+    <script>
+        // Responsive HUD Navbar Link Interceptor
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+        // Adaptive HUD Color Theme Engine
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-toggle-icon');
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = "fa-solid fa-moon text-indigo-600";
+            } else {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = "fa-solid fa-sun text-neonCyan";
+            }
+        });
+
+        // Modular Telemetry Specs Interceptor
+        const modal = document.getElementById('specs-modal');
+        function inspectNode(title = '', desc = '') {
+            if(modal.classList.contains('hidden')) {
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal-desc').innerHTML = desc;
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            } else {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        // Fullscreen Lightbox Frame Controls
+        const lbModal = document.getElementById('lightbox-modal');
+        const lbImg = document.getElementById('lightbox-img');
+        function popLightbox(src) {
+            lbImg.src = src;
+            lbModal.classList.remove('hidden');
+        }
+        function closeLightbox() {
+            lbModal.classList.add('hidden');
+        }
+
+        // Advanced Scroll Vector Reveal Engine
+        const runReveal = () => {
+            const nodes = document.querySelectorAll('.reveal-node');
+            nodes.forEach(el => {
+                const targetBreakpoint = window.innerHeight - 80;
+                const boundingTop = el.getBoundingClientRect().top;
+                if(boundingTop < targetBreakpoint) el.classList.add('active');
+            });
+        };
+        window.addEventListener('scroll', runReveal);
+        window.addEventListener('load', runReveal);
+    </script>
+</body>
+</html>
